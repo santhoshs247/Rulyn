@@ -1,0 +1,247 @@
+/* Futuristic Button Component Styles */
+.futuristic-btn {
+    position: relative;
+    width: 11em;
+    height: 4em;
+    outline: none;
+    transition: 0.1s;
+    background-color: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ddebf0;
+    cursor: pointer;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.futuristic-btn:focus {
+    outline: none;
+}
+
+.futuristic-clip {
+    --color: var(--btn-color, #f97316);
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    border: 5px double var(--color);
+    box-shadow: inset 0px 0px 15px #7c2d12;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    transition: all 0.3s ease;
+}
+
+.futuristic-arrow {
+    position: absolute;
+    transition: 0.2s;
+    background-color: var(--btn-color, #f97316);
+    top: 35%;
+    width: 11%;
+    height: 30%;
+}
+
+.futuristic-leftArrow {
+    left: -13.5%;
+    clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
+}
+
+.futuristic-rightArrow {
+    clip-path: polygon(100% 49%, 0 0, 0 100%);
+    -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%);
+    left: 102%;
+}
+
+.futuristic-btn:hover .futuristic-rightArrow {
+    background-color: var(--btn-hover-color, #27c39f);
+    left: -15%;
+    animation: 0.6s ease-in-out both infinite alternate futuristic-rightArrow;
+}
+
+.futuristic-btn:hover .futuristic-leftArrow {
+    background-color: var(--btn-hover-color, #27c39f);
+    left: 103%;
+    animation: 0.6s ease-in-out both infinite alternate futuristic-leftArrow;
+}
+
+.futuristic-corner {
+    position: absolute;
+    width: 4em;
+    height: 4em;
+    background-color: var(--btn-color, #f97316);
+    box-shadow: inset 1px 1px 8px #ea580c;
+    transform: scale(1) rotate(45deg);
+    transition: 0.2s;
+}
+
+.futuristic-rightTop {
+    top: -1.98em;
+    left: 91%;
+}
+
+.futuristic-leftTop {
+    top: -1.96em;
+    left: -3.0em;
+}
+
+.futuristic-leftBottom {
+    top: 2.10em;
+    left: -2.15em;
+}
+
+.futuristic-rightBottom {
+    top: 45%;
+    left: 88%;
+}
+
+.futuristic-btn:hover .futuristic-leftTop {
+    animation: 0.1s ease-in-out 0.05s both futuristic-changeColor,
+        0.2s linear 0.4s both futuristic-lightEffect;
+}
+
+.futuristic-btn:hover .futuristic-rightTop {
+    animation: 0.1s ease-in-out 0.15s both futuristic-changeColor,
+        0.2s linear 0.4s both futuristic-lightEffect;
+}
+
+.futuristic-btn:hover .futuristic-rightBottom {
+    animation: 0.1s ease-in-out 0.25s both futuristic-changeColor,
+        0.2s linear 0.4s both futuristic-lightEffect;
+}
+
+.futuristic-btn:hover .futuristic-leftBottom {
+    animation: 0.1s ease-in-out 0.35s both futuristic-changeColor,
+        0.2s linear 0.4s both futuristic-lightEffect;
+}
+
+.futuristic-btn:hover .futuristic-corner {
+    transform: scale(1.25) rotate(45deg);
+}
+
+.futuristic-btn:hover .futuristic-clip {
+    animation: 0.2s ease-in-out 0.55s both futuristic-greenLight;
+    --color: var(--btn-hover-color, #27c39f);
+}
+
+/* Size Variants */
+.futuristic-btn.large {
+    width: 14em;
+    height: 5em;
+    font-size: 16px;
+}
+
+.futuristic-btn.small {
+    width: 9em;
+    height: 3.5em;
+    font-size: 11px;
+}
+
+/* Color Variants */
+.futuristic-btn.purple {
+    --btn-color: #8b5cf6;
+    --btn-hover-color: #a855f7;
+}
+
+.futuristic-btn.pink {
+    --btn-color: #ec4899;
+    --btn-hover-color: #f472b6;
+}
+
+.futuristic-btn.orange {
+    --btn-color: #f97316;
+    --btn-hover-color: #fbbf24;
+}
+
+.futuristic-btn.green {
+    --btn-color: #10b981;
+    --btn-hover-color: #34d399;
+}
+
+/* Keyframe Animations */
+@keyframes futuristic-changeColor {
+    from {
+        background-color: var(--btn-color, #2781c3);
+    }
+
+    to {
+        background-color: var(--btn-hover-color, #27c39f);
+    }
+}
+
+@keyframes futuristic-lightEffect {
+    from {
+        box-shadow: 1px 1px 5px var(--btn-hover-color, #27c39f);
+    }
+
+    to {
+        box-shadow: 0 0 2px var(--btn-hover-color, #27c39f);
+    }
+}
+
+@keyframes futuristic-greenLight {
+    from {
+        box-shadow: inset 0px 0px 15px #7c2d12;
+    }
+
+    to {
+        box-shadow: inset 0px 0px 32px var(--btn-hover-color, #27c39f);
+    }
+}
+
+@keyframes futuristic-leftArrow {
+    from {
+        transform: translate(0px);
+    }
+
+    to {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes futuristic-rightArrow {
+    from {
+        transform: translate(0px);
+    }
+
+    to {
+        transform: translateX(-10px);
+    }
+}
+
+/* Glow pulse effect */
+.futuristic-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(ellipse at center, var(--btn-color, #2761c3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.futuristic-btn:hover::before {
+    opacity: 0.3;
+    animation: futuristic-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes futuristic-pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.5;
+    }
+}

@@ -1,0 +1,222 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Teacher {
+  id                   Int                @id @default(autoincrement())
+  name                 String
+  email                String             @unique
+  password_hash        String
+  subject              String             @default("")
+  school               String             @default("")
+  school_code          String             @default("")
+  phone                String?
+  language_preference  String             @default("english")
+  notifications        Json               @default("{\"studentActivity\":true,\"quizCompletions\":true,\"dailyDigest\":false,\"parentMessages\":true,\"systemUpdates\":true}")
+  created_at           DateTime           @default(now())
+
+  classes              Class[]
+  assignments          Assignment[]
+  stories              Story[]
+  schedule_events      ScheduleEvent[]
+  conversations        Conversation[]
+}
+
+model Student {
+  id           String           @id  // Clerk User ID
+  name         String
+  email        String           @unique
+  grade        Int              @default(8)
+  class_id     Int?
+  xp           Int              @default(0)
+  level        Int              @default(1)
+  streak       Int              @default(0)
+  last_active  DateTime?
+  created_at   DateTime         @default(now())
+
+  class        Class?           @relation(fields: [class_id], references: [id])
+  story_progress   StoryProgress[]
+  quiz_submissions QuizSubmission[]
+  badges           Badge[]
+  badge_progress   BadgeProgress[]
+  assignment_completions AssignmentCompletion[]
+  settings         StudentSettings?
+}
+
+model Class {
+  id          Int          @id @default(autoincrement())
+  name        String
+  teacher_id  Int
+  school_code String       @default("")
+  created_at  DateTime     @default(now())
+
+  teacher     Teacher      @relation(fields: [teacher_id], references: [id])
+  students    Student[]
+  assignments Assignment[]
+}
+
+model Story {
+  id            Int             @id @default(autoincrement())
+  title         String
+  topic         String          @default("")
+  subject       String
+  description   String          @default("")
+  cover_image   String          @default("📖")
+  grade_range   String          @default("")
+  difficulty    String          @default("Easy")
+  read_time     String          @default("5 min")
+  xp            Int             @default(50)
+  content       Json            // [{ image, text }]
+  quiz          Json            // [{ question, options[], correct }]
+  created_by    Int?
+  status        String          @default("published")
+  created_at    DateTime        @default(now())
+
+  teacher       Teacher?        @relation(fields: [created_by], references: [id])
+  story_progress    StoryProgress[]
+  quiz_submissions  QuizSubmission[]
+  assignments       Assignment[]
+}
+
+model StoryProgress {
+  id           Int       @id @default(autoincrement())
+  story_id     Int
+  student_id   String
+  completed    Boolean   @default(false)
+  progress_pct Int       @default(0)
+  completed_at DateTime?
+
+  story        Story     @relation(fields: [story_id], references: [id])
+  student      Student   @relation(fields: [student_id], references: [id])
+
+  @@unique([story_id, student_id])
+}
+
+model QuizSubmission {
+  id           Int      @id @default(autoincrement())
+  story_id     Int
+  student_id   String
+  score        Int
+  max_score    Int
+  percentage   Float
+  xp_earned    Int
+  answers      Json
+  submitted_at DateTime @default(now())
+
+  story        Story    @relation(fields: [story_id], references: [id])
+  student      Student  @relation(fields: [student_id], references: [id])
+}
+
+model Badge {
+  id          Int      @id @default(autoincrement())
+  student_id  String
+  badge_key   String
+  earned_at   DateTime @default(now())
+
+  student     Student  @relation(fields: [student_id], references: [id])
+
+  @@unique([student_id, badge_key])
+}
+
+model BadgeProgress {
+  id          Int     @id @default(autoincrement())
+  student_id  String
+  badge_key   String
+  progress    Int     @default(0)
+  total       Int
+
+  student     Student @relation(fields: [student_id], references: [id])
+
+  @@unique([student_id, badge_key])
+}
+
+model Assignment {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String    @default("")
+  type          String    // quiz / story / story+quiz
+  story_id      Int?
+  teacher_id    Int
+  class_id      Int
+  due_date      DateTime
+  assigned_date DateTime  @default(now())
+  points        Int       @default(100)
+  status        String    @default("active")
+  created_at    DateTime  @default(now())
+
+  story         Story?    @relation(fields: [story_id], references: [id])
+  teacher       Teacher   @relation(fields: [teacher_id], references: [id])
+  class         Class     @relation(fields: [class_id], references: [id])
+  completions   AssignmentCompletion[]
+}
+
+model AssignmentCompletion {
+  id            Int        @id @default(autoincrement())
+  assignment_id Int
+  student_id    String
+  completed_at  DateTime   @default(now())
+
+  assignment    Assignment @relation(fields: [assignment_id], references: [id])
+  student       Student    @relation(fields: [student_id], references: [id])
+
+  @@unique([assignment_id, student_id])
+}
+
+model ScheduleEvent {
+  id          Int      @id @default(autoincrement())
+  teacher_id  Int
+  title       String
+  type        String   // lesson / quiz / live / deadline
+  date        String
+  time        String
+  duration    String   @default("45 min")
+  class_name  String   @default("")
+  color       String   @default("from-blue-500 to-indigo-600")
+  created_at  DateTime @default(now())
+
+  teacher     Teacher  @relation(fields: [teacher_id], references: [id])
+}
+
+model Conversation {
+  id                Int       @id @default(autoincrement())
+  teacher_id        Int
+  type              String    // student / parent / group
+  participant_id    String?
+  participant_name  String
+  participant_avatar String   @default("👤")
+  is_group          Boolean   @default(false)
+  group_size        Int?
+  created_at        DateTime  @default(now())
+
+  teacher           Teacher   @relation(fields: [teacher_id], references: [id])
+  messages          Message[]
+}
+
+model Message {
+  id              Int          @id @default(autoincrement())
+  conversation_id Int
+  sender_type     String       // teacher / student / parent
+  sender_id       String
+  text            String
+  read            Boolean      @default(false)
+  sent_at         DateTime     @default(now())
+
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+}
+
+model StudentSettings {
+  id            Int     @id @default(autoincrement())
+  student_id    String  @unique
+  theme         String  @default("light")
+  language      String  @default("english")
+  notifications Json    @default("{\"dailyReminder\":true,\"achievements\":true,\"assignments\":true,\"streakAlerts\":true}")
+
+  student       Student @relation(fields: [student_id], references: [id])
+}
