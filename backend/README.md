@@ -61,7 +61,8 @@ This section maps every page to the backend data it needs.
 |---|---|---|
 | Runtime | **Node.js v20+** | Matches the frontend ecosystem |
 | Framework | **Express.js** | Lightweight, minimal, widely used |
-| Database | **PostgreSQL** | Relational; perfect for students, teachers, scores |
+| Database | **MySQL** | Relational; perfect for students, teachers, scores |
+
 | ORM | **Prisma** | Type-safe DB access, auto-migrations |
 | Auth (Students) | **@clerk/backend** | Verify Clerk JWT from frontend |
 | Auth (Teachers) | **jsonwebtoken + bcryptjs** | Custom login credential flow |
@@ -506,7 +507,8 @@ PORT=3000
 NODE_ENV=development
 
 # Database
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/rulyn_db"
+DATABASE_URL="mysql://root:password@localhost:3306/rulyn_db"
+
 
 # Clerk (for student token verification)
 CLERK_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxxx
